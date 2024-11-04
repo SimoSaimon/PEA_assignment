@@ -3,22 +3,30 @@ import matplotlib.pyplot as plt
 from collections import deque
 
 
-tMax = 1200000
-
+tMax = 12000000
+t = ts1 = ts2 = ts3 = ts4 = tc = curRTT = 0
 s = 1
-t = 0
 
-sxt = deque()
-sxt.append([t, s])
+# GUI Time parameters
+p1g = 0.8
+l1g = 0.4
+l2g = 0.1
 
-ts1 = 0
-ts2 = 0
-ts3 = 0
-ts4 = 0
-tc = 0
+# Cash Payment parameters
+lec = 0.4
+
+# Electronic payment parameters
+lee = 2
+kee = 4
+
+# Printing parameters
+p1p = 0.95
+k1p = 2 
+l1p = 10
+k2p = 1
+l2p = 0.1
 
 RTT = deque()
-curRTT = 0
 
 def calc_cost():
     u = np.random.rand()
@@ -31,7 +39,7 @@ def calc_cost():
 
 
 while t < tMax:
-    dt = 0
+    
     # Waiting Input
     if s == 1:
         
@@ -51,21 +59,17 @@ while t < tMax:
         u1 = np.random.rand()
         u2 = np.random.rand()
         
-        p1h = 0.8
-        l1h = 0.4
-        l2h = 0.1
-        
-        if u1<p1h:
-            dt=-np.log(u2)/l1h
+        if u1<p1g:
+            dt=-np.log(u2)/l1g
         else:
-            dt=-np.log(u2)/l2h
+            dt=-np.log(u2)/l2g
             
         ts1 = ts1 + dt
         curRTT = curRTT + dt
         
     # Cash Payment
     if s == 2:
-        dt = -np.log(1-np.random.rand())/0.4
+        dt = -np.log(1-np.random.rand())/lec
         ts2 = ts2 + dt
         curRTT = curRTT + dt
         ns = 4
@@ -73,27 +77,24 @@ while t < tMax:
         
     # Electronic Payment
     if s == 3:
-        for i in range (0,4):
-            dt = dt - np.log(np.random.rand())/2
+        u = np.random.rand(kee)
+        dt = -np.sum(np.log(u))/lee
         ts3 = ts3 + dt
         curRTT = curRTT + dt
         ns = 4
     
     # Printing
-    
     if s == 4:
-             
-        p1h = 0.95
         
-        if u1<p1h:
-            kh = 2
-            lh = 10
+        if u1<p1p:
+            k = k1p
+            l = l1p
         else:
-            kh = 1
-            lh = 0.1
+            k = k2p
+            l = l2p
             
-        u = np.random.rand(kh)
-        dt = -np.sum(np.log(u))/lh
+        u = np.random.rand(k)
+        dt = -np.sum(np.log(u))/l
         ts4 = ts4 + dt
         curRTT = curRTT + dt
         ns = 1
@@ -101,13 +102,6 @@ while t < tMax:
     t = t + dt
     s = ns
 
-    sxt.append([t, s])
-    
-#print(sxt)
-sxtA = np.array(list(sxt))
-
-#plt.stairs(sxtA[0:-1,1], sxtA[:,0])
-#plt.show()
 
 print("Prob. Task 1: ", ts1 / t)
 print("Prob. Task 2: ", ts2 / t)
