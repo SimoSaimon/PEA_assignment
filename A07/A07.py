@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from collections import deque
 
 
-tMax = 1200
+tMax = 1200000
 
 s = 1
 t = 0
@@ -31,13 +31,19 @@ def calc_cost():
 
 
 while t < tMax:
-    
+    dt = 0
     # Waiting Input
     if s == 1:
+        
+        if t != 0:
+            RTT.append(curRTT)
+            curRTT = 0
+        
         u = np.random.rand()
-        if u < 0.3:
+        
+        if u < 0.2:
             ns = 1
-        elif u < 0.58:
+        elif u < 0.48:
             ns = 2
         else:
             ns = 3
@@ -76,31 +82,25 @@ while t < tMax:
     # Printing
     
     if s == 4:
-        
-        u1 = np.random.rand()
-        u2 = np.random.rand()
-        
+             
         p1h = 0.95
-        l1h = 10
-        l2h = 0.1
         
         if u1<p1h:
-            for i in range (0,2):
-                dt = dt - np.log(u2)/l1h
+            kh = 2
+            lh = 10
         else:
-            for i in range (0,1):
-                print(i)
-                dt = dt + - np.log(u2)/l2h
-
+            kh = 1
+            lh = 0.1
+            
+        u = np.random.rand(kh)
+        dt = -np.sum(np.log(u))/lh
         ts4 = ts4 + dt
         curRTT = curRTT + dt
-        RTT.append(curRTT)
-        curRTT = 0
         ns = 1
         
     t = t + dt
     s = ns
-    #print(s)
+
     sxt.append([t, s])
     
 #print(sxt)
@@ -114,4 +114,4 @@ print("Prob. Task 2: ", ts2 / t)
 print("Prob. Task 3: ", ts3 / t)
 print("Prob. Task 4: ", ts4 / t)
 print("Average time between two executions of the same task: ", np.mean(list(RTT)))
-print(f"Average cash collected by the machine in 20 hours of operation: {tc}")
+print(f"Average cash collected by the machine in 20 hours of operation: {tc/(tMax/1200)}")
