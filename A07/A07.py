@@ -26,6 +26,7 @@ l1p = 10
 k2p = 1
 l2p = 0.1
 
+tot = 0
 RTT = deque()
 
 def calc_cost():
@@ -98,7 +99,7 @@ while t < tMax:
         ts4 = ts4 + dt
         curRTT = curRTT + dt
         ns = 1
-        
+        tot = tot + 1
     t = t + dt
     s = ns
 
@@ -107,5 +108,7 @@ print("Prob. Task 1: ", ts1 / t)
 print("Prob. Task 2: ", ts2 / t)
 print("Prob. Task 3: ", ts3 / t)
 print("Prob. Task 4: ", ts4 / t)
+print(f"Total cycle (including people who don't buy ticket): {len(RTT)}")
+print(f"Total cycle from first to last task: {tot}")
 print("Average time between two executions of the same task: ", np.mean(list(RTT)))
 print(f"Average cash collected by the machine in 20 hours of operation: {tc/(tMax/1200)}")
