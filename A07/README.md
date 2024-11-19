@@ -1,57 +1,77 @@
-# Confidence Intervals
+# Automatic Ticketing Machine Analysis
+
 ___
 
 ### Overview
-Consider an automatic ticket machine, placed in a very crowded area. We can consider that as soon as a costumer completes her transaction, a new one is immediately available to start a new purchase. 
 
-The costumer first starts interacting with the Graphical User Interface of the machine. The time required to complete her choice, is Hyper-exponential distributed with the characteristics shown in row A of the table I below. 20% of the costumers does not buy a ticket and leave immediately the machine. The other 80% who purchases a ticket, pays it either with cash (35%) or with an electronic transaction (65%). The length of two operations is different, and it is reported respectively in rows B and C of table I below. When payment has been completed, the system prints the ticket, with a time that follows row D of table I below. Table II shows the cost of the tickets, with the probability that the corresponding document is issued.
+This report examines an automatic ticket machine in a crowded area, where customers engage in ticket purchasing
+transactions. A new customer is assumed to start their transaction immediately after the previous customer finishes. The
+machine has the following stages of interaction:
+
+1. Customer interaction with the Graphical User Interface (GUI).
+2. Ticket purchase decision.
+3. Payment process (cash or electronic).
+4. Ticket printing.
+
+The following analysis includes:
+
+1. A state machine diagram for the transaction process.
+2. Probabilities for each state (waiting for user input, cash transaction, electronic transaction, and printing).
+3. The average duration of a transaction.
+4. The expected cash collected over 20 hours of operation.
+
 ---
 
-### Scenarios
+### Transaction Flow
 
-#### Scenario I
-- **Arrival Distribution**: Two-stage hyper-exponential
-  - λ₁ = 0.025
-  - λ₂ = 0.1
-  - p₁ = 0.35
-- **Service Distribution**: Weibull
-  - Shape (k) = 0.333
-  - Scale (λ) = 2.5
+| Stage                     | Description            | Distribution                                                                                                                                               |
+|---------------------------|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **A. GUI Time**           | Customer input         | 2-stage Hyper-exponential:<br>- \( p_1 = 0.8, \lambda_1 = 0.4 \, \text{min}^{-1} \)<br>- \( p_2 = 0.2, \lambda_2 = 0.1 \, \text{min}^{-1} \)               |
+| **B. Cash Payment**       | Cash transaction       | Exponential: \( \lambda = 0.4 \, \text{min}^{-1} \)                                                                                                        |
+| **C. Electronic Payment** | Electronic transaction | Erlang: \( k = 4, \lambda = 2 \, \text{min}^{-1} \)                                                                                                        |
+| **D. Printing**           | Ticket printing        | 2-stage Hyper-Erlang:<br>- \( p_1 = 0.95, k_1 = 2, \lambda_1 = 10 \, \text{min}^{-1} \)<br>- \( p_2 = 0.05, k_2 = 1, \lambda_2 = 0.1 \, \text{min}^{-1} \) |
 
-#### Scenario II
-- **Arrival Distribution**: Erlang
-  - Stages (k) = 8
-  - Rate (λ) = 1.25
-- **Service Distribution**: Uniform
-  - Range: a = 1, b = 10
+---
+
+### Ticket Fares
+
+| Ticket Type | Fare (€) | Probability |
+|-------------|----------|-------------|
+| Urban       | 2.50     | 90%         |
+| Area I      | 4.00     | 6%          |
+| Area II     | 6.00     | 4%          |
 
 ---
 
 ### Results
 
-For each scenario, batches of M = 5000 jobs were used to compute the 95% confidence intervals of the following performance indices, with a 2% relative error.
+#### 1. State Machine
 
-#### Scenario I
+A state machine diagram represents the interaction sequence and transition probabilities for each stage.
 
-- **Utilization**: <span style="color:lightgreen;font-weight:bold">0.7301114756101802, 0.7317809487482906</span>
-- **Throughput**: <span style="color:lightgreen;font-weight:bold">0.04855699920663156, 0.048593210974977444</span>
-- **Average Number of Jobs in System**: <span style="color:lightgreen;font-weight:bold">21.317087404597146, 21.74761648048574</span>
-- **Average Response Time**: <span style="color:lightgreen;font-weight:bold">438.5727573345932, 447.4135370252048</span>
+![State Machine Diagram](A07_state_machine.png)
 
-- **Number of Batches (K) for Required Accuracy**: <span style="color:lightgreen;font-weight:bold">12060 iterations</span>
+#### 2. State Probabilities
 
-#### Scenario II
+- **Waiting for User Input**: 63.58%
+- **Cash Transaction**: 11.09%
+- **Electronic Transaction**: 16.54%
+- **Printing**: 8.79%
 
-- **Utilization**: <span style="color:lightgreen;font-weight:bold">0.8574932888599173, 0.8605153275682179</span>
-- **Throughput**: <span style="color:lightgreen;font-weight:bold">0.15604840424684432, 0.15644722785671186</span>
-- **Average Number of Jobs in System**: <span style="color:lightgreen;font-weight:bold">1.575660233175678, 1.607074987437922</span>
-- **Average Response Time**: <span style="color:lightgreen;font-weight:bold">10.089513571555935, 10.278160889792497</span>
+#### 3. Average Transaction Duration
 
-- **Number of Batches (K) for Required Accuracy**: <span style="color:lightgreen;font-weight:bold">80 iterations</span>
+The average duration for a transaction (in minutes) is computed based on the distributions of each stage.
 
+- **Average Transaction Time**: 6.299 minutes
+
+#### 4. Cash Collected Over 20 Hours
+
+The average cash collected by the machine over a 20-hour period is calculated based on ticket fares and probabilities.
+
+- **Total Cash Collected (20 hours)**: 145.39 €
 
 ---
 
 ### Python Script
 
-Python script that calculates all the above values: [**A06.py**](A06.py)
+Python script that calculates all the above values and generates the state machine diagram: [**A07.py**](A07.py)
