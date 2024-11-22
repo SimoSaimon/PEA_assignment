@@ -24,14 +24,13 @@ The following analysis includes:
 
 ### Transaction Flow
 
-| Stage                     | Description            | Distribution                                                                                                                                               |
-|---------------------------|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **A. GUI Time**           | Customer input         | 2-stage Hyper-exponential:<br>- \( p_1 = 0.8, \lambda_1 = 0.4 \, \text{min}^{-1} \)<br>- \( p_2 = 0.2, \lambda_2 = 0.1 \, \text{min}^{-1} \)               |
-| **B. Cash Payment**       | Cash transaction       | Exponential: \( \lambda = 0.4 \, \text{min}^{-1} \)                                                                                                        |
-| **C. Electronic Payment** | Electronic transaction | Erlang: \( k = 4, \lambda = 2 \, \text{min}^{-1} \)                                                                                                        |
-| **D. Printing**           | Ticket printing        | 2-stage Hyper-Erlang:<br>- \( p_1 = 0.95, k_1 = 2, \lambda_1 = 10 \, \text{min}^{-1} \)<br>- \( p_2 = 0.05, k_2 = 1, \lambda_2 = 0.1 \, \text{min}^{-1} \) |
+| Stage                     | Description            | Distribution                          |
+|---------------------------|------------------------|---------------------------------------|
+| **A. GUI Time**           | Customer input         | 2-stage Hyper-exponential: p₁ = 0.8, λ₁ = 0.4, p₂ = 0.2, λ₂ = 0.1 |
+| **B. Cash Payment**       | Cash transaction       | Exponential: λ = 0.4                  |
+| **C. Electronic Payment** | Electronic transaction | Erlang: k = 4, λ = 2                  |
+| **D. Printing**           | Ticket printing        | 2-stage Hyper-Erlang: p₁ = 0.95, k₁ = 2, λ₁ = 10, p₂ = 0.05, k₂ = 1, λ₂ = 0.1 |
 
----
 
 ### Ticket Fares
 
